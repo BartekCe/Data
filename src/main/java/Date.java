@@ -1,15 +1,14 @@
 public class Date {
-    private int day;
-    private int month;
-    private int year;
+    private final int day;
+    private final int month;
+    private final int year;
 
     public Date(int day, int month, int year) {
-
-        if (isWithSecondMonth(month) && (day <= 0 || day > 28))
+        if (isThisSecondMonth(month) && (day <= 0 || day > 28))
             throw new IllegalArgumentException(String.format("Day can be only in range 1-28, you have tried set day at %s", day));
-        if (!(isWithLongerMonth(month)) && (day <= 0 || day >30))
+        if (isThisShorterMonth(month) && (day <= 0 || day > 30))
             throw new IllegalArgumentException(String.format("Day can be only in range 1-30, you have tried set day at %s", day));
-        if (isWithLongerMonth(month) && (day <= 0 || day >31))
+        if (isThisLongerMonth(month) && (day <= 0 || day > 31))
             throw new IllegalArgumentException(String.format("Day can be only in range 1-31, you have tried set day at %s", day));
 
         this.day = day;
@@ -22,24 +21,12 @@ public class Date {
         return day;
     }
 
-    public void setDay(int day) {
-        this.day = day;
-    }
-
     public int getMonth() {
         return month;
     }
 
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
     public int getYear() {
         return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
     }
 
     @Override
@@ -70,22 +57,42 @@ public class Date {
     }
 
     public Date changeDays(Date oldDate, int amountOfAddedDays) {
-        if(isWithLongerMonth(oldDate.getMonth())
-                && (oldDate.getDay() + amountOfAddedDays) > 31){
-            Date newDate = changeMonths(oldDate,1);
-            newDate.setDay((amountOfAddedDays + oldDate.getDay()) - 31);
-            return newDate;
+        int sumOfDays = amountOfAddedDays + oldDate.getDay();
+        if (sumOfDays > oldDate.getNumberOfDaysInMonth(oldDate.getMonth())) {
+            int sumOfDaysAfterChangingMonth = sumOfDays - oldDate.getNumberOfDaysInMonth(oldDate.getMonth());
+            int numberOfDaysInNextMonth = oldDate.getNumberOfDaysInMonth(oldDate.getMonth() + 1);
+
+            if (sumOfDaysAfterChangingMonth <= numberOfDaysInNextMonth) {
+                return new Date(sumOfDaysAfterChangingMonth, oldDate.getMonth() + 1, oldDate.getYear());
+            } else {
+                Date newDate = new Date(1, oldDate.getMonth() + 1, oldDate.getYear());
+                return changeDays(newDate, sumOfDaysAfterChangingMonth - 1);
+            }
         }
         return new Date(oldDate.getDay() + amountOfAddedDays,
                 oldDate.getMonth(),
                 oldDate.getYear());
     }
 
-    private boolean isWithSecondMonth(int month) {
+    public int getNumberOfDaysInMonth(int month) {
+        if (isThisSecondMonth(month)) {
+            return 28;
+        } else if (isThisLongerMonth(month)) {
+            return 31;
+        } else {
+            return 30;
+        }
+    }
+
+    private boolean isThisSecondMonth(int month) {
         return month == 2;
     }
 
-    private boolean isWithLongerMonth(int month) {
+    private boolean isThisShorterMonth(int month) {
+        return month == 4 || month == 6 || month == 9 || month == 11;
+    }
+
+    private boolean isThisLongerMonth(int month) {
         return month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12;
     }
 }
