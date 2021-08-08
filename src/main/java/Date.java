@@ -12,9 +12,13 @@ public class Date {
             throw new IllegalArgumentException(String.format("Day can be only in range 1-31, you have tried set day at %s", day));
 
         this.day = day;
-        this.month = month;
-        this.year = year;
-
+        if (month > 12) {
+            this.month = 1;
+            this.year = year + 1;
+        } else {
+            this.month = month;
+            this.year = year;
+        }
     }
 
     public int getDay() {
@@ -58,9 +62,9 @@ public class Date {
 
     public Date changeDays(Date oldDate, int amountOfAddedDays) {
         int sumOfDays = amountOfAddedDays + oldDate.getDay();
-        if (sumOfDays > oldDate.getNumberOfDaysInMonth(oldDate.getMonth())) {
-            int sumOfDaysAfterChangingMonth = sumOfDays - oldDate.getNumberOfDaysInMonth(oldDate.getMonth());
-            int numberOfDaysInNextMonth = oldDate.getNumberOfDaysInMonth(oldDate.getMonth() + 1);
+        if (sumOfDays > oldDate.getNumberOfDaysInMonth(oldDate.getMonth(), oldDate.getYear())) {
+            int sumOfDaysAfterChangingMonth = sumOfDays - oldDate.getNumberOfDaysInMonth(oldDate.getMonth(), oldDate.getYear());
+            int numberOfDaysInNextMonth = oldDate.getNumberOfDaysInMonth(oldDate.getMonth() + 1, oldDate.getYear());
 
             if (sumOfDaysAfterChangingMonth <= numberOfDaysInNextMonth) {
                 return new Date(sumOfDaysAfterChangingMonth, oldDate.getMonth() + 1, oldDate.getYear());
@@ -74,14 +78,20 @@ public class Date {
                 oldDate.getYear());
     }
 
-    public int getNumberOfDaysInMonth(int month) {
-        if (isThisSecondMonth(month)) {
+    public int getNumberOfDaysInMonth(int month, int year) {
+        if (isThisSecondMonth(month) && !isLeapYear(year)) {
             return 28;
         } else if (isThisLongerMonth(month)) {
             return 31;
-        } else {
+        } else if (isThisShorterMonth(month)) {
             return 30;
+        } else {
+            return 29;
         }
+    }
+
+    private boolean isLeapYear(int year) {
+        return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
     }
 
     private boolean isThisSecondMonth(int month) {
