@@ -34,16 +34,29 @@ class DateTest {
     }
 
     @Test
-    void addingMonthsWhenSumOfMonthsIsGreaterThanTwelveChangeMonthsAndYearsInDate(SoftAssertions softly) {
+    void addingAmountOfMonthsThatChangeYearByOne(SoftAssertions softly) {
         Date dateWithAddedMonths = date.changeMonths(date, 6);
         softly.assertThat(dateWithAddedMonths.getMonth()).isEqualTo(1);
         softly.assertThat(dateWithAddedMonths.getYear()).isEqualTo(1995);
     }
 
     @Test
-    void addingDayWhenSumOfDaysIsGreaterThanAmountOfDaysInThatMonthChangeDaysAndMonthsInDate(SoftAssertions softly) {
-        Date dateWithAddedDays = date.changeDays(date,15);
+    void addingAmountOfDaysThatChangeMonthNumberInDateByOne(SoftAssertions softly) {
+        Date dateWithAddedDays = date.changeDays(date, 15);
         softly.assertThat(dateWithAddedDays.getDay()).isEqualTo(6);
         softly.assertThat(dateWithAddedDays.getMonth()).isEqualTo(8);
+    }
+
+    @Test
+    void addingAmountOfDaysThatChangeMonthNumberInDateByTwo(SoftAssertions softly) {
+        Date dateWithAddedDays = date.changeDays(date, 42);
+        softly.assertThat(dateWithAddedDays.getMonth()).isEqualTo(9);
+        softly.assertThat(dateWithAddedDays.getDay()).isEqualTo(2);
+    }
+    @Test
+    void addingAmountOfDaysThatChangeMonthNumberInDateByThree(SoftAssertions softly) {
+        Date dateWithAddedDays = date.changeDays(date, 70);
+        softly.assertThat(dateWithAddedDays.getMonth()).isEqualTo(9);
+        softly.assertThat(dateWithAddedDays.getDay()).isEqualTo(30);
     }
 }
