@@ -62,6 +62,9 @@ public class Date {
 
     public Date changeDays(Date oldDate, int amountOfAddedDays) {
         int sumOfDays = amountOfAddedDays + oldDate.getDay();
+        if(sumOfDays == 0){
+            return previousMonthLastDay(oldDate);
+        }
         if (sumOfDays > oldDate.getNumberOfDaysInMonth(oldDate.getMonth(), oldDate.getYear())) {
             int sumOfDaysAfterChangingMonth = sumOfDays - oldDate.getNumberOfDaysInMonth(oldDate.getMonth(), oldDate.getYear());
             int numberOfDaysInNextMonth = oldDate.getNumberOfDaysInMonth(oldDate.getMonth() + 1, oldDate.getYear());
@@ -76,6 +79,13 @@ public class Date {
         return new Date(oldDate.getDay() + amountOfAddedDays,
                 oldDate.getMonth(),
                 oldDate.getYear());
+    }
+
+    private Date previousMonthLastDay(Date oldDate) {
+        if(!(oldDate.getMonth() == 1))
+        return new Date(getNumberOfDaysInMonth(oldDate.getMonth() -1, oldDate.getYear()), oldDate.getMonth() -1, oldDate.getYear());
+        else
+            return new Date(getNumberOfDaysInMonth(oldDate.getMonth() -1, oldDate.getYear()), oldDate.getMonth() -1, oldDate.getYear() -1);
     }
 
     public int getNumberOfDaysInMonth(int month, int year) {
