@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(SoftAssertionsExtension.class)
 class DateTest {
     private Date date;
@@ -16,21 +14,21 @@ class DateTest {
     }
 
     @Test
-    void addingYearChangeYearInDate() {
+    void addingYearChangeYearInDate(SoftAssertions softly) {
         Date dateWithAddedYear = date.changeYears(date, 1);
-        assertThat(dateWithAddedYear.getYear()).isEqualTo(1995);
+        softly.assertThat(dateWithAddedYear.getYear()).isEqualTo(1995);
     }
 
     @Test
-    void addingMonthsChangeMonthInDate() {
+    void addingMonthsChangeMonthInDate(SoftAssertions softly) {
         Date dateWithAddedMonth = date.changeMonths(date, 2);
-        assertThat(dateWithAddedMonth.getMonth()).isEqualTo(9);
+        softly.assertThat(dateWithAddedMonth.getMonth()).isEqualTo(9);
     }
 
     @Test
-    void addingDaysChangeDayInDate() {
+    void addingDaysChangeDayInDate(SoftAssertions softly) {
         Date dateWithAddedDay = date.changeDays(date, 9);
-        assertThat(dateWithAddedDay.getDay()).isEqualTo(31);
+        softly.assertThat(dateWithAddedDay.getDay()).isEqualTo(31);
     }
 
     @Test
@@ -70,9 +68,24 @@ class DateTest {
     }
 
     @Test
-    void secondMonthInLeapYearHasTwentyNineDays() {
+    void secondMonthInLeapYearHasTwentyNineDays(SoftAssertions softly) {
         Date leapYear = new Date(1, 2, 2000);
         int numberOfDaysInSecondMonth = leapYear.getNumberOfDaysInMonth(2, 2000);
-        assertThat(numberOfDaysInSecondMonth).isEqualTo(29);
+        softly.assertThat(numberOfDaysInSecondMonth).isEqualTo(29);
+    }
+
+    @Test
+    void subtractingDayByThreeChangeDateByThree(SoftAssertions softly) {
+        Date dateWithSubtractDays = date.changeDays(date, -3);
+        softly.assertThat(dateWithSubtractDays.getMonth()).isEqualTo(7);
+        softly.assertThat(dateWithSubtractDays.getDay()).isEqualTo(19);
+    }
+
+    @Test
+    void subtractingDaysThatChangeMonthInDateByOne(SoftAssertions softly) {
+        Date dateWithSubtractDays = date.changeDays(date, -22);
+        softly.assertThat(dateWithSubtractDays.getMonth()).isEqualTo(6);
+        softly.assertThat(dateWithSubtractDays.getDay()).isEqualTo(30);
+
     }
 }
